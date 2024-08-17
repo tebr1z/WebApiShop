@@ -10,5 +10,20 @@ namespace WebApiShop.Mappers
             Name = dto.Name,
             Limit = dto.Limit,
         };
+        public static GroupReturnDto GroupToReturnDto(Group group) => new GroupReturnDto
+        {
+            Id = group.Id,
+            Name = group.Name,
+            Limit = group.Limit,
+            CreatedDate =group.CreatedDate,
+            UpdateDate =group.UpdateDate,
+          Students = group.Students.Select(s=>new StudentInGroupReturnDto
+          {
+              Name=s.Name,
+              Point = s.Point,
+
+
+          }).ToList(),
+        };
     }
 }
