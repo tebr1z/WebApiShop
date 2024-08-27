@@ -10,6 +10,9 @@ namespace WebApiShop.Dtos.GroupDtos
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public List<StudentInGroupReturnDto> Students { get; set; }
+        public int StudentsCount { get; set; }
+        public string Image { get; set; }
+
     }
     public class StudentInGroupReturnDto
     {

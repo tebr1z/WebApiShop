@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiShop.Data;
 
@@ -11,9 +12,11 @@ using WebApiShop.Data;
 namespace WebApiShop.DLL.Data.Migrations
 {
     [DbContext(typeof(WebApiShopContext))]
-    partial class WebApiShopContextModelSnapshot : ModelSnapshot
+    [Migration("20240819132453_Image")]
+    partial class Image
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

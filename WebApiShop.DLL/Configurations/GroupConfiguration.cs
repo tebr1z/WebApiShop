@@ -28,7 +28,10 @@ namespace WebApiShop.DLL.Configurations
                 .IsRequired(true)
                 .HasDefaultValueSql("getdate()");
 
-        
+            builder
+                .Property(g => g.Image)
+                .IsRequired(true)
+                .HasMaxLength(100);
         }
     }
 }
