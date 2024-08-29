@@ -7,6 +7,7 @@ using WebApiShop.Data;
 using WebApiShop.DLL.Entites;
 using WebApiShop.Dtos.GroupDtos;
 using WebApiShop.Extension;
+using WebApiShop.Helpers;
 
 
 namespace WebApiShop.Controllers
@@ -52,43 +53,56 @@ namespace WebApiShop.Controllers
 
             if (await _context.Groups.AnyAsync(g => g.Name.ToLower() == groupCreateDto.Name.ToLower()))
                 return BadRequest("Dublicate Group Name....");
-            var file=groupCreateDto.File;
+         
 
-            Group group = new();
-            group.Name = groupCreateDto.Name;
-            group.Limit = groupCreateDto.Limit;
-            group.Image = file.Save(Directory.GetCurrentDirectory(),"uploads/images");
+        var group = _mapper.Map<Group> (groupCreateDto);
             await _context.Groups.AddAsync(group);
             await _context.SaveChangesAsync();
             return StatusCode(201);
         }
 
-        //[HttpPut("{id}")]
+        [HttpPut("{id}")]
 
-        //public async Task<IActionResult>Update(int id, GroupUpdateDto groupUpdateDto)
-        //{
-        //    var existGroup =await _context.Groups.FirstOrDefaultAsync(g=> g.Id == id);
-        //    if (existGroup == null) return NotFound();
+        public async Task<IActionResult> Update(int id, GroupUpdateDto groupUpdateDto)
+        {
+            var existGroup = await _context.Groups.FirstOrDefaultAsync(g => g.Id == id);
+            if (existGroup == null) return NotFound();
 
-        //    if (existGroup.Name!= groupUpdateDto.Name&&await _context.Groups.AnyAsync(g => g.Name.ToLower() == groupUpdateDto.Name.ToLower() && g.Id != id))
-        //        return BadRequest("Dublicate Group Name.........");
+            if (existGroup.Name != groupUpdateDto.Name && await _context.Groups.AnyAsync(g => g.Name.ToLower() == groupUpdateDto.Name.ToLower() && g.Id != id))
+                return BadRequest("Dublicate Group Name.........");
 
 
-        //    existGroup.Name= groupUpdateDto.Name;
-        //    existGroup.Limit = groupUpdateDto.Limit;
-        //    existGroup.UpdateDate = DateTime.Now;
-        //   await _context.SaveChangesAsync();
-        //    return Ok(existGroup);
-        //}
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var existGroup = await _context.Groups.FirstOrDefaultAsync(g => g.Id == id);
-        //    if (existGroup == null) return NotFound();
+            existGroup.Name = groupUpdateDto.Name;
+            existGroup.Limit = groupUpdateDto.Limit;
+            if (groupUpdateDto.File != null)
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","uploads","images", existGroup.Image);
+                FileHelper.Delete(path);
 
-        //   _context.Groups.Remove(existGroup);
-        //    await _context.SaveChangesAsync();
-        //    return NoContent();
-        //}
+                existGroup.Image = groupUpdateDto.File == null ? existGroup.Image : groupUpdateDto.File.Save(Directory.GetCurrentDirectory(), "uploads/images");
+            }
+
+            existGroup.UpdateDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return Ok(existGroup);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var existGroup = await _context.Groups.FirstOrDefaultAsync(g => g.Id == id);
+            if (existGroup == null) return NotFound();
+
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "images", existGroup.Image);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+
+            _context.Groups.Remove(existGroup);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }

@@ -4,6 +4,8 @@ namespace WebApiShop.Dtos.GroupDtos
 {
     public class GroupReturnDto
     {
+   
+
         public int Id { get; set; }
         public string Name { get; set; }
         public int Limit { get; set; }
@@ -12,6 +14,7 @@ namespace WebApiShop.Dtos.GroupDtos
         public List<StudentInGroupReturnDto> Students { get; set; }
         public int StudentsCount { get; set; }
         public string Image { get; set; }
+       
 
     }
     public class StudentInGroupReturnDto
