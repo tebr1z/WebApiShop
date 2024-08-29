@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApiShop.DLL.Entites;
 using WebApiShop.Dtos.GroupDtos;
+using WebApiShop.Dtos.StudentDto;
 using WebApiShop.Extension;
 
 
@@ -26,8 +27,10 @@ namespace WebApiShop.Profiles
                 .ForMember(d => d.Image, map => map.MapFrom(s => url+"uploads/images/" + s.Image));
             CreateMap<GroupCreateDto, Group>()
                 .ForMember(g => g.Image, map => map.MapFrom(d => d.File.Save(Directory.GetCurrentDirectory(), "uploads/images")));
-            //group.Image = file.Save(Directory.GetCurrentDirectory(), "uploads/images");
 
+            CreateMap<StudentCreateDto, Student>().ReverseMap();
+            CreateMap<Student, StudentRetrunDto>();
+                
 
         }
     }
